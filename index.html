@@ -29,7 +29,7 @@ class fingerPrint {
         }
     }
     var params = "licstr="+encodeURIComponent(secugen_lic);
-    params += "&timeout=5000&Quality=50&licstr=&templateFormat=ISO&imageWSQRate=0.75&SrvHandle="+session;
+    params += "&timeout=5000&Quality=50&licstr=&templateFormat=ISO&imageWSQRate=0.75&SrvHandle="+session+"&FingerPos=LEFT_THUMB";
     xhttp.open("POST", uri, true);
     xhttp.send(params);
     }
