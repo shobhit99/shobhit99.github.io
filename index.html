@@ -10,17 +10,24 @@
   <script type="application/javascript" src="https://unpkg.com/react-dom@16.0.0/umd/react-dom.production.min.js"></script>
   <script type="application/javascript" src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 </head>
-​
-​
 <!-- https://localhost:8443/SGIFPCapture -->
 <!-- https://localhost:8443/SGIFPEnroll -->
 <script type="text/javascript">
-var session = '';
+var session = "";
 var secugen_lic = "";
-var all_prints = '';
+var all_prints = "";
+var dummy_prints = [
+{"fpos":"LEFT_THUMB","nfiq":1,"TemplateBase64":"Rk1SACAyMAAAAACKAAABBAEsAMUAxQEAABBfEoB9AAjnAEDDAChbAEBOADZ9AIBuAFluAEBMAGvuAEBYAHlrAEAtAIIVAEBKAISAAECwAIxaAEA8AJYDAIBaAKNoAEBBAMjZAEA+ANTQAEDGANVUAEBqAPleAEC5ARBfAIB3ARlsAECoASVlAAAA"},
+{"fpos":"LEFT_INDEX","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACQAAABBAEsAMUAxQEAABBjE4BQABWHAECMABbuAECTAElsAIC1AFteAEBJAF+iAICDAHB2AEC+AHfZAEBIAI6qAEAlAJ0pAIBZAKgvAIDJALROAIBaALevAIB0AMrZAIB2ANTJAIBdAPa8AEB1APhNAECHAQlVAEBIAQ8hAEClARRRAAAA"},
+{"fpos":"LEFT_MIDDLE","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACuAAABBAEsAMUAxQEAABBaGECRABF7AEBcABsHAEBXACmWAEAdACuWAEBHAD4aAECwAEf4AEBeAFieAIC9AGJ7AEAuAIwkAEDsAI5lAECpAI/7AEAZAKaqAEDdAKxpAECJANckAIBNAOUrAECxAPLsAEDvAPneAECHAPwaAEDOAP9YAIDBAQBlAEAyAQYhAEAaAQchAICVAQ0AAEB7ARcRAAAA"},
+{"fpos":"LEFT_RING","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACiAAABBAEsAMUAxQEAABBjFkBjABCgAECJAB4RAEDUAB/uAEC0AFL0AEDNAG/dAIBQAHgoAECgAHsGAEBzAHsmAEDdAI9YAICbAJsTAECpAKm1AICcAKurAECuAK3DAEDYAMVUAICLAMcrAEDQAM57AICdAOccAEDkAO1xAEDOAPH7AECiAPsUAIBgARIaAEB7ASMUAAAA"},
+{"fpos":"LEFT_LITTLE","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACiAAABBAEsAMUAxQEAABBjFkBjABCgAECJAB4RAEDUAB/uAEC0AFL0AEDNAG/dAIBQAHgoAECgAHsGAEBzAHsmAEDdAI9YAICbAJsTAECpAKm1AICcAKurAECuAK3DAEDYAMVUAICLAMcrAEDQAM57AICdAOccAEDkAO1xAEDOAPH7AECiAPsUAIBgARIaAEB7ASMUAAAA"},
+{"fpos":"RIGHT_THUMB","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACKAAABBAEsAMUAxQEAABBjEkBeACIHAICZACXxAECZAC5zAEB/ADj7AEB0AEGAAEBTAEUKAEAWAEgcAECOAGd1AEAYAHkeAECJAH3qAEAnAJoeAEBDAKgVAEBqALnqAIC1ANtTAEBfAQGnAIB1AQTDAEB/AQ/KAEBhAQ+qAAAA"}
+]
+
 
 class fingerPrint {
-    scan(finger) {
+    multipleScan(finger) {
     var uri = "https://localhost:8443/SGIFPEnroll";
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -35,16 +42,42 @@ class fingerPrint {
                 alert("Error Code : "+fpobject.ErrorCode);
             }
         }
+        else {
+            
+        }
     }
     var params = "licstr="+encodeURIComponent(secugen_lic);
-    params += "&timeout=5000&Quality=50&licstr=&templateFormat=ISO&imageWSQRate=0.75&SrvHandle="+session+"&FingerPos="+finger;
+    params += "&timeout=5000&Quality=50&templateFormat=ISO&imageWSQRate=0.75&SrvHandle="+session+"&FingerPos="+finger;
     xhttp.open("POST", uri, true);
     xhttp.send(params);
     }
+    scan(){
+        var uri = "https://localhost:8443/SGIFPCapture";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var fpobject = JSON.parse(xhttp.responseText);
+            if (fpobject.ErrorCode == 0) {
+                document.getElementById('single').src = "data:image/bmp;base64," + fpobject.BMPBase64;
+            }
+            else {
+                alert("Error Code : "+fpobject.ErrorCode);
+            }
+        }
+        else {
+            
+        }
+        }
+        var params = "licstr="+encodeURIComponent(secugen_lic);
+        params += "&timeout=5000&Quality=50&templateFormat=ISO&imageWSQRate=0.75";
+        xhttp.open("POST", uri, true);
+        xhttp.send(params);
+    }
 }
-fp = new fingerPrint()
+fp = new fingerPrint();
 </script>
 <body>
+<h1> Finger Print Enroll </h1>
 <img border="2" id="LEFT_THUMB" alt="Fingerpint Image" height=220 width=140 src="finger.png">
 <img border="2" id="LEFT_INDEX" alt="Fingerpint Image" height=220 width=140 src="finger.png">
 <img border="2" id="LEFT_MIDDLE" alt="Fingerpint Image" height=220 width=140 src="finger.png">
@@ -55,16 +88,19 @@ fp = new fingerPrint()
 <img border="2" id="RIGHT_MIDDLE" alt="Fingerpint Image" height=220 width=140 src="finger.png">
 <img border="2" id="RIGHT_RING" alt="Fingerpint Image" height=220 width=140 src="finger.png">
 <img border="2" id="RIGHT_LITTLE" alt="Fingerpint Image" height=220 width=140 src="finger.png"></br>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('LEFT_THUMB');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Thumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('LEFT_INDEX');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('LEFT_MIDDLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('LEFT_RING');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Ring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('LEFT_LITTLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Little&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('RIGHT_THUMB');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Thumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('RIGHT_INDEX');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('RIGHT_MIDDLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('RIGHT_RING');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Ring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan('RIGHT_LITTLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Little&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_THUMB');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Thumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_INDEX');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_MIDDLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_RING');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Ring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_LITTLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Little&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_THUMB');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Thumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_INDEX');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_MIDDLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_RING');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Ring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_LITTLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Little&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
 <input type="hidden" value="" id="finger_prints"/>
+<h1> Single Finger Print </h1>
+<img border="2" id="single" alt="Fingerpint Image" height=220 width=140 src="finger.png">
+<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan();">Scan</button>
 </body>
 </html>
