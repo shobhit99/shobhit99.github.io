@@ -29,7 +29,7 @@ class fingerPrint {
             if (fpobject.ErrorCode == 0) {
                 document.getElementById(finger).src = "data:image/bmp;base64," + fpobject.BMPBase64;
                 all_prints = fpobject.EnrollData.Templates;
-                session = fpobject.SrvHandle;
+                session = fpobject.SerHandle;
             }
             else {
                 alert("Error Code : "+fpobject.ErrorCode);
