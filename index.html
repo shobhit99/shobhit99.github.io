@@ -10,26 +10,30 @@
   <script type="application/javascript" src="https://unpkg.com/react-dom@16.0.0/umd/react-dom.production.min.js"></script>
   <script type="application/javascript" src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 </head>
-​
-​
+
+
 <!-- https://localhost:8443/SGIFPCapture -->
 <!-- https://localhost:8443/SGIFPEnroll -->
 <script type="text/javascript">
-var session = '';
+var session = 0;
 var secugen_lic = "";
 
 class fingerPrint {
     scan(finger) {
-    var uri = "https://localhost:8443/SGIFPCapture";
+    var uri = "https://localhost:8443/SGIFPEnroll";
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var fpobject = JSON.parse(xhttp.responseText);
             document.getElementById("RT").src = "data:image/bmp;base64," + fpobject.BMPBase64;
+            session = fpobject.SrvHandle;
         }
     }
     var params = "licstr="+encodeURIComponent(secugen_lic);
     params += "&timeout=5000&Quality=50&licstr=&templateFormat=ISO&imageWSQRate=0.75";
+    if (session) {
+        params += "SrvHandle="+session
+    }
     xhttp.open("POST", uri, true);
     xhttp.send(params);
     }
