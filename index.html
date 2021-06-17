@@ -1,106 +1,531 @@
-<!DOCTYPE html>
-<html lang="en">
-​
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>React Local</title>
-    <script type="application/javascript" src="https://unpkg.com/react@16.0.0/umd/react.production.min.js"></script>
-  <script type="application/javascript" src="https://unpkg.com/react-dom@16.0.0/umd/react-dom.production.min.js"></script>
-  <script type="application/javascript" src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+<title>My Portfolio</title>
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/css/uikit.min.css" />
+
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/js/uikit-icons.min.js"></script>
+
+
+<link href="style.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.0-canary.16/tailwind.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
 </head>
-<!-- https://localhost:8443/SGIFPCapture -->
-<!-- https://localhost:8443/SGIFPEnroll -->
-<script type="text/javascript">
-var session = "";
-var secugen_lic = "";
-var all_prints = "";
-var dummy_prints = [
-{"fpos":"LEFT_THUMB","nfiq":1,"TemplateBase64":"Rk1SACAyMAAAAACKAAABBAEsAMUAxQEAABBfEoB9AAjnAEDDAChbAEBOADZ9AIBuAFluAEBMAGvuAEBYAHlrAEAtAIIVAEBKAISAAECwAIxaAEA8AJYDAIBaAKNoAEBBAMjZAEA+ANTQAEDGANVUAEBqAPleAEC5ARBfAIB3ARlsAECoASVlAAAA"},
-{"fpos":"LEFT_INDEX","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACQAAABBAEsAMUAxQEAABBjE4BQABWHAECMABbuAECTAElsAIC1AFteAEBJAF+iAICDAHB2AEC+AHfZAEBIAI6qAEAlAJ0pAIBZAKgvAIDJALROAIBaALevAIB0AMrZAIB2ANTJAIBdAPa8AEB1APhNAECHAQlVAEBIAQ8hAEClARRRAAAA"},
-{"fpos":"LEFT_MIDDLE","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACuAAABBAEsAMUAxQEAABBaGECRABF7AEBcABsHAEBXACmWAEAdACuWAEBHAD4aAECwAEf4AEBeAFieAIC9AGJ7AEAuAIwkAEDsAI5lAECpAI/7AEAZAKaqAEDdAKxpAECJANckAIBNAOUrAECxAPLsAEDvAPneAECHAPwaAEDOAP9YAIDBAQBlAEAyAQYhAEAaAQchAICVAQ0AAEB7ARcRAAAA"},
-{"fpos":"LEFT_RING","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACiAAABBAEsAMUAxQEAABBjFkBjABCgAECJAB4RAEDUAB/uAEC0AFL0AEDNAG/dAIBQAHgoAECgAHsGAEBzAHsmAEDdAI9YAICbAJsTAECpAKm1AICcAKurAECuAK3DAEDYAMVUAICLAMcrAEDQAM57AICdAOccAEDkAO1xAEDOAPH7AECiAPsUAIBgARIaAEB7ASMUAAAA"},
-{"fpos":"LEFT_LITTLE","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACiAAABBAEsAMUAxQEAABBjFkBjABCgAECJAB4RAEDUAB/uAEC0AFL0AEDNAG/dAIBQAHgoAECgAHsGAEBzAHsmAEDdAI9YAICbAJsTAECpAKm1AICcAKurAECuAK3DAEDYAMVUAICLAMcrAEDQAM57AICdAOccAEDkAO1xAEDOAPH7AECiAPsUAIBgARIaAEB7ASMUAAAA"},
-{"fpos":"RIGHT_THUMB","nfiq":2,"TemplateBase64":"Rk1SACAyMAAAAACKAAABBAEsAMUAxQEAABBjEkBeACIHAICZACXxAECZAC5zAEB/ADj7AEB0AEGAAEBTAEUKAEAWAEgcAECOAGd1AEAYAHkeAECJAH3qAEAnAJoeAEBDAKgVAEBqALnqAIC1ANtTAEBfAQGnAIB1AQTDAEB/AQ/KAEBhAQ+qAAAA"}
-]
-
-
-class fingerPrint {
-    multipleScan(finger) {
-    var uri = "https://localhost:8443/SGIFPEnroll";
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-            var fpobject = JSON.parse(xhttp.responseText);
-            if (fpobject.ErrorCode == 0) {
-                document.getElementById(finger).src = "data:image/bmp;base64," + fpobject.BMPBase64;
-                all_prints = fpobject.EnrollData.Templates;
-                session = fpobject.SerHandle;
-            }
-            else {
-                alert("Error Code : "+fpobject.ErrorCode);
-            }
-        }
-        else {
-            
-        }
-    }
-    var params = "licstr="+encodeURIComponent(secugen_lic);
-    params += "&timeout=5000&Quality=50&templateFormat=ISO&imageWSQRate=0.75&SrvHandle="+session+"&FingerPos="+finger;
-    xhttp.open("POST", uri, true);
-    xhttp.send(params);
-    }
-    scan(){
-        var uri = "https://localhost:8443/SGIFPCapture";
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-            var fpobject = JSON.parse(xhttp.responseText);
-            if (fpobject.ErrorCode == 0) {
-                document.getElementById('single').src = "data:image/bmp;base64," + fpobject.BMPBase64;
-            }
-            else {
-                alert("Error Code : "+fpobject.ErrorCode);
-            }
-        }
-        else {
-            
-        }
-        }
-        var params = "licstr="+encodeURIComponent(secugen_lic);
-        params += "&timeout=5000&Quality=50&templateFormat=ISO&imageWSQRate=0.75";
-        xhttp.open("POST", uri, true);
-        xhttp.send(params);
-    }
-}
-fp = new fingerPrint();
-</script>
 <body>
-<h1> Finger Print Enroll </h1>
-<img border="2" id="LEFT_THUMB" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="LEFT_INDEX" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="LEFT_MIDDLE" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="LEFT_RING" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="LEFT_LITTLE" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="RIGHT_THUMB" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="RIGHT_INDEX" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="RIGHT_MIDDLE" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="RIGHT_RING" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<img border="2" id="RIGHT_LITTLE" alt="Fingerpint Image" height=220 width=140 src="finger.png"></br>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_THUMB');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Thumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_INDEX');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_MIDDLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_RING');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Ring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('LEFT_LITTLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Little&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_THUMB');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Thumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_INDEX');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_MIDDLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_RING');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Ring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.multipleScan('RIGHT_LITTLE');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Little&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-<input type="hidden" value="" id="finger_prints"/>
-<h1> Single Finger Print </h1>
-<img border="2" id="single" alt="Fingerpint Image" height=220 width=140 src="finger.png">
-<button type="button" class="btn btn-primary" id ="RI" onclick = "fp.scan();">Scan</button>
+    <div class="flex flex-auto items-center justify-center my-10">
+        <div class="w-9/12 shadow-2xl border-2">
+            <div class="flex flex-col">
+                <!-- Intro -->
+                <div class="flex justify-evenly my-10">
+                    <div class="m-2 flex-none">
+                        <img class="rounded-full h-48 border" src="https://assets.codepen.io/6305618/internal/avatars/users/default.png"/>
+                    </div>
+                    <div class="flex flex-col m-2">
+                        <div>
+                            <h2 class="font-bold text-4xl">Hi I'm Shobhit</h2>
+                            <h4 class="text-xl">I am Software Engineer working at CrelioHealth as a full stack developer.<br>
+                            My expertise lies in writing robust code, strong debugging skills and coming up with out of the box</br>
+                            solutions for engineering problems :)</h4>
+                            <h4 class="text-xl">Apart from job, I love breaking things for fun and create art with code</h4></br>
+                        </div>
+                        <div class="flex mt-2">
+                            <a href="https://github.com/shobhit99" class="uk-icon-button ml-1" target="_blank" uk-icon="github-alt"></a>
+                            <a href="https://www.linkedin.com/in/shobhit-bhosure-189252181/" target="_blank" class="uk-icon-button  ml-1" uk-icon="linkedin"></a>
+                            <a href="https://twitter.com/nullbytes00" class="uk-icon-button ml-1" target="_blank" uk-icon="twitter"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border mx-2"></div>
+                <!-- Tech stack -->
+                <div class="flex flex-col m-8">
+                    <h2 class="font-bold text-xl text-gray-900">Technologies I've worked on</h2>
+                    <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">At CrelioHealth</span> Python, Django, Flask, React, Redis, MySQL, Pusher, Centrifugo, S3</h1>
+                    <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Apart from work, I've also worked on</span> S3, EC2, Tailwinds, NextJs, Php, Android, Java, Bash</h1>
+                    <h2 class="font-bold text-xl text-gray-900 mt-4">Other things I like to do</h2>
+                    <h1 class="text-lg pt-2">Hacking, Gaming, Sketching, Trekking and working on multiple side projects</h1>
+                </div>
+                <!-- Projects -->
+                <div class="mt-8 ml-8 font-bold text-3xl" id="projects">Projects</div>
+                <!-- project1 -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex flex-col">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">Livetrack - Remote Monitoring Tool</div>
+                            <div uk-slideshow="animation: push, ratio: false">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow="ratio: 6:3">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/livetrack_main.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Dashboard with machine details and live thumbnail preview</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/livetrack_commands.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Take control of machine with remote desktop, Take screenshot, restart, check clipboard contents, lock USB</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/livetrack_thumbnails.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Live preview of all connected client machines</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/livetrack_shellaccess.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Execute shell commands directly</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/livetrack_socat.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Cross platform interactive shell access without ssh</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/livetrack_history.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Get alerts when specific applications are opened by client</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <iframe src="https://www.youtube-nocookie.com/embed/XRO4sLR79mY?autoplay=1&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;loop=1&amp;modestbranding=1&amp;wmode=transparent&amp;playsinline=1" width="1920" height="1080" frameborder="0" allowfullscreen uk-cover></iframe>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Python, Twisted for Socket Programming, Qt for UI, Linux commands, Socat for Remote Shell</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> BE Project</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> Cross platform application which supports simultaneous connections and comes with features like Remote Desktop, App usage tracking, Live preview of machine, 
+                                                            Shell access to the system, Alerts, Remtote commands (e.g Restart, screenshot, clipboard)</h1>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex sm:mt-2 md:mt-2">
+                            <a href="https://www.youtube.com/watch?v=XRO4sLR79mY" target="_blank"><button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                                Watch Demo
+                                <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- project1 end -->
+                <!-- project2 -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex sm:flex-col md:flex-col lg:flex-row">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">Clipco.de</div>
+                            <div uk-slideshow="animation: push">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/clipcode_main.png" alt="" uk-cover>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/clipcode_options.png" alt="" uk-cover>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 lg:ml-4 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Python, Django, React (react desktop, Ace editor), S3, EC2, Route 53, Sentry</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Personal</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> <a href="http://clipco.de" target="_blank" class="text-blue-600">clipco.de</a> was built with aim to make sharing code snippets easier right from code editor, includes basic features like
+                                (Code highlighting, code expiry and protecting clip with password), All clips are stored on s3 bucket. this project was previously made in php, jquery and prism js and had linux tool and vscode extension (refer video). I rebuilt this in django and react for learning full stack including aws tools, need to write
+                                vscode extension for new API</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Note</span> I know it isn't ssl secured, aws billed me $22 for using their elastic load balancer for using ssl just for a month :/</h1>
+                        </div>
+                    </div>
+                    <div class="flex sm:mt-2 md:mt-2">
+                        <a href="http://clipco.de" target="_blank"><button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                            Visit Site
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- project2 end -->
+                <!-- project3 -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex sm:flex-col md:flex-col lg:flex-row">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">probethis</div>
+                            <div uk-slideshow="animation: push">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow="ratio: 7:3">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/probethis_main.png" alt="" uk-cover>
+                                        </li>
+                                        <li>
+                                            <iframe src="https://www.youtube-nocookie.com/embed/vt6cW29Q5I8?autoplay=1&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;loop=1&amp;modestbranding=1&amp;wmode=transparent&amp;playsinline=1" width="1920" height="1080" frameborder="0" allowfullscreen uk-cover></iframe>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 lg:ml-4 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Python</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Personal</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> Made this to make my recon process easier as i had to do this manually, i.e checking website endpoints for data and status codes.
+                                    Infosec users really liked this tool, but just a day after launch of this tool projectdiscovery.io launched httpx which does same thing :)</h1>
+                        </div>
+                    </div>
+                    <div class="flex sm:mt-2 md:mt-2">
+                        <a href="https://www.youtube.com/watch?v=vt6cW29Q5I8" target="_blank">
+                            <button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                                Watch Demo
+                                <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </button>
+                        </a>
+                        <a href="https://github.com/shobhit99/probethis" class="ml-2" target="_blank"><button class="uk-button uk-button-secondary border border-gray-800 inline-flex items-center font-semibold">
+                            View Code
+                            <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path stroke="#ffffff" fill="#ffffff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- project3 end -->
+                <!-- project4 -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex sm:flex-col md:flex-col lg:flex-row">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">Instakart</div>
+                            <div uk-slideshow="animation: push, ratio: false">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow="ratio: 5:3">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_main.png" alt="" uk-cover>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_user_dashboard.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">User dashboard</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_verify.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Link your instagram account</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_add_account.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Add details for gig</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_view_gig.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Gig details and overview</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_explore.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">View gigs of other influencers with multiple filters</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_deposit.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Add credits with paypal</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_confirm.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Order Gig with contents and timing for it to be posted</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/instakart_admin_dashboard.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Admin dashboard  - Approve accounts payments, ban account...</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 lg:ml-4 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Php, Bootstrap, Jquery, Paypal integration for payment, Cron Jobs</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Paid Project</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> This was a paid project i built back in 2016 (Made public in 2019), this project was built to bring together instagram influencers and people who wants to market their
+                            product according to budget and audience. This project consists of 20+ modules. influencers starts by linking their account to instakart and listing it with price, amount of time for shoutout etc. while buyers can filter instagram accounts
+                             based on their needs and purchase a shoutout and will be able to track their post right through dashboard. Site owner has it's own admin panel where he can approve, decline payouts, bas users and do much more. Site uses paypal for payments</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Note</span> This was built in 2016, Instagram has secured their APIs so app won't be able to scrape data, I've added hardcoded json for google account</h1>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex sm:mt-2 md:mt-2">
+                            <a href="http://instakart.hstn.me" target="_blank"><button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                                Demo
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </button>
+                            </a>
+                            <a href="https://github.com/shobhit99/instakart" target="_blank" class="ml-2">
+                                <button class="uk-button uk-button-secondary border border-gray-800 inline-flex items-center font-semibold">
+                                    View Code
+                                    <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path stroke="#ffffff" fill="#ffffff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- project4 end -->
+                <!-- project5 -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex sm:flex-col md:flex-col lg:flex-row">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">gif2ascii</div>
+                            <div uk-slideshow="animation: push">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow="ratio: 9:5">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/gif2ascii_joker.png" alt="" uk-cover>
+                                        </li>
+                                        <li>
+                                            <iframe src="https://www.youtube-nocookie.com/embed/ayr2xp-8ixs?autoplay=1&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;loop=1&amp;modestbranding=1&amp;wmode=transparent&amp;playsinline=1" width="1920" height="1080" frameborder="0" allowfullscreen uk-cover></iframe>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 lg:ml-4 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Python, Bash</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Personal</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> I liked the idea of screenfetch tool, I was wondering if i can add gif instead of static linux distro logo</h1>
+                        </div>
+                    </div>
+                    <div class="flex sm:mt-2 md:mt-2">
+                        <a href="https://www.youtube.com/watch?v=ayr2xp-8ixs" target="_blank">
+                            <button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                                Watch Demo
+                                <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </button>
+                        </a>
+                        <a href="https://github.com/shobhit99/gif2ascii" class="ml-2" target="_blank"><button class="uk-button uk-button-secondary border border-gray-800 inline-flex items-center font-semibold">
+                            View Code
+                            <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path stroke="#ffffff" fill="#ffffff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- project6 end -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex sm:flex-col md:flex-col lg:flex-row">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">Doge Meet</div>
+                            <div uk-slideshow="animation: push">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow="ratio: 10:6">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/dogemeet_extension.png" alt="" uk-cover>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/dogemeet_main.png" alt="" uk-cover>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 lg:ml-4 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Javascript</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Personal</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> Doge Meet is chrome extension for Google Meet which once activated turns everyone's profile picture into doge and talks
+                             as user speaks, it works based on audio levels used by google meet</h1>
+                        </div>
+                    </div>
+                    <div class="flex sm:mt-2 md:mt-2">
+                        <a href="https://www.youtube.com/watch?v=FOEHTFoIaK8" target="_blank">
+                            <button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                                Watch Demo
+                                <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- project6 end -->
+                <!-- project6 end -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex sm:flex-col md:flex-col lg:flex-row">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">Thor CSS Art</div>
+                            <div uk-slideshow="animation: push">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/thor.png" alt="" uk-cover>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 lg:ml-4 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Html, CSS</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Personal</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> This isn't really a project, It's Vector of thor created using pure Html and CSS</h1>
+                        </div>
+                    </div>
+                    <div class="flex mt-4 sm:mt-6 md:mt-6">
+                        <a href="https://codepen.io/shobhit-bhosure/pen/ExWZpwO" target="_blank"><button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                            View on Codepen
+                            <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" ><title>CodePen</title><path d="M18.144 13.067v-2.134L16.55 12zm1.276 1.194a.628.628 0 01-.006.083l-.005.028-.011.053-.01.031c-.005.016-.01.031-.017.047l-.014.03a.78.78 0 01-.021.043l-.019.03a.57.57 0 01-.08.1l-.026.025a.602.602 0 01-.036.03l-.029.022-.01.008-6.782 4.522a.637.637 0 01-.708 0L4.864 14.79l-.01-.008a.599.599 0 01-.065-.052l-.026-.025-.032-.034-.021-.028a.588.588 0 01-.067-.11l-.014-.031a.644.644 0 01-.017-.047l-.01-.03c-.004-.018-.008-.036-.01-.054l-.006-.028a.628.628 0 01-.006-.083V9.739c0-.028.002-.055.006-.083l.005-.027.011-.054.01-.03a.574.574 0 01.12-.217l.031-.034.026-.025a.62.62 0 01.065-.052l.01-.008 6.782-4.521a.638.638 0 01.708 0l6.782 4.521.01.008.03.022.035.03c.01.008.017.016.026.025a.545.545 0 01.08.1l.019.03a.633.633 0 01.021.043l.014.03c.007.016.012.032.017.047l.01.031c.004.018.008.036.01.054l.006.027a.619.619 0 01.006.083zM12 0C5.373 0 0 5.372 0 12 0 18.627 5.373 24 12 24c6.628 0 12-5.372 12-12 0-6.627-5.372-12-12-12m0 10.492L9.745 12 12 13.51 14.255 12zm.638 4.124v2.975l4.996-3.33-2.232-1.493zm-6.272-.356l4.996 3.33v-2.974l-2.764-1.849zm11.268-4.52l-4.996-3.33v2.974l2.764 1.85zm-6.272-.356V6.41L6.366 9.74l2.232 1.493zm-5.506 1.549v2.134L7.45 12Z"/></svg>
+                        </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- project6 end -->
+                <!-- project7 -->
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex flex-col">
+                        <div class="flex flex-col flex-15">
+                            <div class="uk-card-title py-2">College MIS</div>
+                            <div uk-slideshow="animation: push, ratio: false">
+                                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+                                    <ul class="uk-slideshow-items">
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_student_attendance.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Student can view their attendance</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_student_marks.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Marks displayed for students</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_student_notices.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Notices added by teachers for students</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_student_books.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Books borrowed by a student</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_teacher_attendance.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Teachers can select subject and add attendance</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_teacher_marks.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Teachers can add marks for unit tests</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_teacher_notice.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Teachers can add / delete notice for specific batches</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_teacher_view_student.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">Teachers can view profile of any student</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <img class="lazyload" data-src="images/college_librarian.png" alt="" uk-cover>
+                                            <div class="uk-overlay uk-overlay-primary uk-position-bottom uk-text-center uk-transition-slide-bottom">
+                                                <p class="uk-margin-remove">librarian can lend books to student</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pt-10 flex-1">
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Technologies Used</span> Python, Jinja, Jquery, Bootstrap</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Type</span> Interview Project</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Description</span> This was interview project, problem statement given by CrelioHealth for interview round. Consists of professor, librarian and student login.
+                                 Professors can add attendance, add exam marks, add notices. librarian can lend books to students, Students can view result, attendance, Notices, Borrow bocks from librarian</h1>
+                            <h1 class="text-lg pt-2"><span class="font-bold text-gray-600">Test credentials</span> You can find test credentials on github repo</h1>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex sm:mt-2 md:mt-2">
+                            <a href="https://collegemis.herokuapp.com/" target="_blank"><button class="uk-button uk-button-default border border-gray-800 inline-flex items-center font-semibold">
+                                Demo
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </button>
+                            </a>
+                            <a href="https://github.com/shobhit99/studentapp" target="_blank" class="ml-2">
+                                <button class="uk-button uk-button-secondary border border-gray-800 inline-flex items-center font-semibold">
+                                    View Code
+                                    <svg role="img" viewBox="0 0 24 24" class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path stroke="#ffffff" fill="#ffffff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- project7 end -->
+                <div class="mt-8 ml-8 font-bold text-3xl">Blog Posts</div>
+                <div class="m-8 uk-card uk-card-default uk-card-body flex flex-col">
+                    <div class="flex justify-evenly">
+                        <div class="flex flex-none">
+                            <img class="h-48 border" src="https://miro.medium.com/max/2000/1*T85SR7643q4e2fvvqADX2A.png"/>
+                        </div>
+                        <div class="flex flex-1 flex-col ml-4">
+                            <h1 class="text-lg"><span class="font-bold text-gray-600">Understanding and Reconstructing PDFs</h1>
+                            <p class="text-lg pt-2">In this post, I’ll talk about the structure of Pdfs and how I managed to solve one of the engineering problems related to Pdfs.
+                            At LiveHealth, the Lab software (web application) comes with an option that enables users to attach a Pdf to the existing lab report.
+                             So the result will be a PDF version of the lab report merged with the attached report. The web application runs on Django 1.x.x and uses Python 2.x.x 
+                             <a href="https://shobhitb.medium.com/understanding-and-reconstructing-pdfs-87cb456f9ecc" target="_blank" class="text-blue-600">Read More</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        lazyload();
+    </script>
 </body>
 </html>
