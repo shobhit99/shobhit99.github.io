@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consistent Hashing Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .ring-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 40px;
+        }
+
+        .hash-ring {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ring-circle {
+            fill: none;
+            stroke: #e8e8e8;
+            stroke-width: 2;
+        }
+
+        .node {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .node circle {
+            fill: #4CAF50;
+            stroke: white;
+            stroke-width: 3;
+            filter: drop-shadow(0 4px 12px rgba(76, 175, 80, 0.3));
+        }
+
+        .node:hover circle {
+            fill: #45a049;
+            transform: scale(1.1);
+        }
+
+        .node text {
+            fill: white;
+            font-weight: 600;
+            font-size: 12px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+        }
+
+        .data-key {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .data-key circle {
+            fill: #2196F3;
+            stroke: white;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 8px rgba(33, 150, 243, 0.3));
+        }
+
+        .data-key text {
+            fill: white;
+            font-size: 9px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .connection-line {
+            stroke: #FF9800;
+            stroke-width: 1.5;
+            stroke-dasharray: 4,4;
+            opacity: 0.6;
+            transition: all 0.4s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            padding: 12px 20px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            background: #fafafa;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .btn.danger:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .legend-dot.node {
+            background: #4CAF50;
+        }
+
+        .legend-dot.data {
+            background: #2196F3;
+        }
+
+        @keyframes nodeAppear {
+            from {
+                opacity: 0;
+                transform: scale(0) rotate(180deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes nodeDisappear {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        @keyframes keyMove {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .node-appear {
+            animation: nodeAppear 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .node-disappear {
+            animation: nodeDisappear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .key-move {
+            animation: keyMove 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .ring-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .input-field {
+                min-width: 100%;
+            }
+            
+            .stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consistent Hashing</h1>
+        <p class="subtitle">Add and remove nodes to see how data redistributes</p>
+
+        <div class="ring-container">
+            <svg class="hash-ring" viewBox="0 0 400 400">
+                <circle class="ring-circle" cx="200" cy="200" r="160"></circle>
+                <g id="connections"></g>
+                <g id="nodes"></g>
+                <g id="data-keys"></g>
+            </svg>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="nodeInput" class="input-field" placeholder="Enter node name (e.g., Server-1)">
+            <button class="btn" onclick="addNode()">Add Node</button>
+            <button class="btn danger" onclick="removeRandomNode()">Remove Node</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot node"></div>
+                <span>Server Nodes</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot data"></div>
+                <span>Data Keys</span>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-value" id="nodeCount">0</span>
+                <div class="stat-label">Nodes</div>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="keyCount">0</span>
+                <div class="stat-label">Keys</div>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="loadBalance">100%</span>
+                <div class="stat-label">Balance</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ConsistentHashingVisualizer {
+            constructor() {
+                this.nodes = new Map();
+                this.dataKeys = new Map();
+                this.svg = document.querySelector('.hash-ring');
+                this.nodesGroup = document.getElementById('nodes');
+                this.keysGroup = document.getElementById('data-keys');
+                this.connectionsGroup = document.getElementById('connections');
+                this.centerX = 200;
+                this.centerY = 200;
+                this.radius = 160;
+                this.nodeRadius = 16;
+                this.keyRadius = 6;
+                this.keyCount = 0;
+                
+                this.initializeDemo();
+            }
+
+            // Better hash function for more even distribution
+            hashToAngle(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                // Use a better distribution method
+                const normalized = Math.abs(hash) / 2147483648; // Normalize to 0-1
+                return normalized * 360;
+            }
+
+            // Convert angle to coordinates
+            angleToCoords(angle, radius = this.radius) {
+                const radian = (angle - 90) * Math.PI / 180;
+                return {
+                    x: this.centerX + radius * Math.cos(radian),
+                    y: this.centerY + radius * Math.sin(radian)
+                };
+            }
+
+            // Generate automatic keys
+            generateKeys() {
+                const keyTypes = ['user', 'session', 'cache', 'data', 'file', 'image', 'video', 'doc'];
+                const keysToGenerate = Math.max(8, this.nodes.size * 3);
+                
+                // Clear existing keys
+                this.dataKeys.clear();
+                this.keysGroup.innerHTML = '';
+                
+                for (let i = 0; i < keysToGenerate; i++) {
+                    const type = keyTypes[Math.floor(Math.random() * keyTypes.length)];
+                    const id = Math.random().toString(36).substring(2, 6);
+                    const keyName = `${type}:${id}`;
+                    
+                    const angle = this.hashToAngle(keyName);
+                    const coords = this.angleToCoords(angle, this.radius);
+                    
+                    const keyGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    keyGroup.classList.add('data-key');
+
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', coords.x);
+                    circle.setAttribute('cy', coords.y);
+                    circle.setAttribute('r', this.keyRadius);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', coords.x);
+                    text.setAttribute('y', coords.y);
+                    text.textContent = id;
+
+                    keyGroup.appendChild(circle);
+                    keyGroup.appendChild(text);
+                    this.keysGroup.appendChild(keyGroup);
+                    
+                    this.dataKeys.set(keyName, { angle, coords, element: keyGroup });
+                }
+                
+                this.updateKeyAssignments();
+                this.updateStats();
+            }
+
+            // Add node
+            addNode(nodeName) {
+                if (this.nodes.has(nodeName)) {
+                    alert('Node already exists!');
+                    return;
+                }
+
+                const angle = this.hashToAngle(nodeName);
+                const coords = this.angleToCoords(angle);
+                
+                const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                nodeGroup.classList.add('node', 'node-appear');
+                nodeGroup.setAttribute('data-node', nodeName);
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', coords.x);
+                circle.setAttribute('cy', coords.y);
+                circle.setAttribute('r', this.nodeRadius);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', coords.x);
+                text.setAttribute('y', coords.y);
+                text.textContent = nodeName.length > 4 ? nodeName.substring(0, 4) : nodeName;
+
+                nodeGroup.appendChild(circle);
+                nodeGroup.appendChild(text);
+                
+                nodeGroup.addEventListener('click', () => {
+                    this.removeNode(nodeName);
+                });
+
+                this.nodesGroup.appendChild(nodeGroup);
+                this.nodes.set(nodeName, { angle, coords, element: nodeGroup });
+
+                // Regenerate keys and update assignments
+                setTimeout(() => {
+                    this.generateKeys();
+                }, 300);
+            }
+
+            // Remove node
+            removeNode(nodeName) {
+                if (!this.nodes.has(nodeName)) return;
+
+                const node = this.nodes.get(nodeName);
+                node.element.classList.add('node-disappear');
+                
+                setTimeout(() => {
+                    if (node.element.parentNode) {
+                        node.element.parentNode.removeChild(node.element);
+                    }
+                    this.nodes.delete(nodeName);
+                    
+                    // Regenerate keys and update assignments
+                    if (this.nodes.size > 0) {
+                        this.generateKeys();
+                    } else {
+                        this.dataKeys.clear();
+                        this.keysGroup.innerHTML = '';
+                        this.updateKeyAssignments();
+                        this.updateStats();
+                    }
+                }, 400);
+            }
+
+            // Find responsible node
+            findResponsibleNode(keyAngle) {
+                if (this.nodes.size === 0) return null;
+
+                let minDistance = Infinity;
+                let responsibleNode = null;
+
+                for (const [nodeName, nodeData] of this.nodes) {
+                    let distance = nodeData.angle - keyAngle;
+                    if (distance < 0) distance += 360;
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        responsibleNode = nodeName;
+                    }
+                }
+
+                return responsibleNode;
+            }
+
+            // Update key assignments
+            updateKeyAssignments() {
+                this.connectionsGroup.innerHTML = '';
+
+                for (const [keyName, keyData] of this.dataKeys) {
+                    keyData.element.classList.add('key-move');
+                    
+                    const responsibleNode = this.findResponsibleNode(keyData.angle);
+                    if (responsibleNode) {
+                        const nodeData = this.nodes.get(responsibleNode);
+                        
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.classList.add('connection-line');
+                        line.setAttribute('x1', keyData.coords.x);
+                        line.setAttribute('y1', keyData.coords.y);
+                        line.setAttribute('x2', nodeData.coords.x);
+                        line.setAttribute('y2', nodeData.coords.y);
+                        
+                        this.connectionsGroup.appendChild(line);
+                    }
+                }
+            }
+
+            // Update statistics
+            updateStats() {
+                document.getElementById('nodeCount').textContent = this.nodes.size;
+                document.getElementById('keyCount').textContent = this.dataKeys.size;
+                
+                if (this.nodes.size === 0 || this.dataKeys.size === 0) {
+                    document.getElementById('loadBalance').textContent = '100%';
+                    return;
+                }
+
+                const keyDistribution = new Map();
+                for (const [keyName, keyData] of this.dataKeys) {
+                    const responsibleNode = this.findResponsibleNode(keyData.angle);
+                    if (responsibleNode) {
+                        keyDistribution.set(responsibleNode, (keyDistribution.get(responsibleNode) || 0) + 1);
+                    }
+                }
+
+                const idealLoad = this.dataKeys.size / this.nodes.size;
+                let maxDeviation = 0;
+                
+                for (const [nodeName] of this.nodes) {
+                    const actualLoad = keyDistribution.get(nodeName) || 0;
+                    const deviation = Math.abs(actualLoad - idealLoad) / idealLoad;
+                    maxDeviation = Math.max(maxDeviation, deviation);
+                }
+
+                const balancePercentage = Math.max(0, (1 - maxDeviation) * 100);
+                document.getElementById('loadBalance').textContent = `${balancePercentage.toFixed(0)}%`;
+            }
+
+            // Initialize demo with better distributed names
+            initializeDemo() {
+                this.addNode('Node-1');
+                setTimeout(() => this.addNode('Node-2'), 500);
+                setTimeout(() => this.addNode('Node-3'), 1000);
+            }
+
+            // Remove random node
+            removeRandomNode() {
+                if (this.nodes.size === 0) {
+                    alert('No nodes to remove!');
+                    return;
+                }
+                
+                const nodeNames = Array.from(this.nodes.keys());
+                const randomNode = nodeNames[Math.floor(Math.random() * nodeNames.length)];
+                this.removeNode(randomNode);
+            }
+        }
+
+        // Global instance
+        let visualizer;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            visualizer = new ConsistentHashingVisualizer();
+        });
+
+        // Global functions
+        function addNode() {
+            const input = document.getElementById('nodeInput');
+            const nodeName = input.value.trim();
+            if (nodeName) {
+                visualizer.addNode(nodeName);
+                input.value = '';
+            } else {
+                alert('Please enter a node name!');
+            }
+        }
+
+        function removeRandomNode() {
+            visualizer.removeRandomNode();
+        }
+
+        // Handle Enter key
+        document.getElementById('nodeInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addNode();
+        });
+    </script>
+</body>
+</html>
